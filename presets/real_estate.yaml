@@ -1,0 +1,37 @@
+# =============================================================================
+# VERTICAL PRESET: Real Estate
+# =============================================================================
+# Overlay for config/agent_config.yaml. Merge over the base config.
+# =============================================================================
+
+vertical: "real_estate"
+
+routes:
+  - id: "A_primary_service"
+    label: "Buyer"
+    trigger: "Caller wants to buy a property."
+  - id: "B_secondary_service"
+    label: "Seller"
+    trigger: "Caller wants to list or sell."
+  - id: "C_partner_program"
+    label: "Agent / referral partner"
+    trigger: "Caller is another agent or a referral source."
+  - id: "D_returning_client"
+    label: "Existing client"
+    trigger: "Caller is a current client in an active transaction."
+  - id: "E_other_triage"
+    label: "Renter / general"
+    trigger: "Rental inquiry or unclear intent."
+
+qualification:
+  checklist:
+    - "Are you looking to buy, sell, or rent?"
+    - "What's your target timeline?"
+    - "What price range or budget are you working with?"
+    - "Are you pre-approved or working with a lender?"
+
+scoring_overrides:
+  intent_clarity: 20
+  fit_threshold: 30     # budget/price range fit
+  timeline: 30
+  decision_power: 20

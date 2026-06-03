@@ -1,0 +1,16 @@
+# Local config with real values — never commit
+config/*.local.yaml
+config/*.local.json
+*.env
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,7 @@
+# Locale: English (en)
+greeting: "Thanks for calling {{COMPANY_NAME}}, this is {{AGENT_NAME}}. How can I help you today?"
+ask_intent: "So I can point you in the right direction, what are you hoping to accomplish?"
+booking_offer: "I'd like to get you on a quick {{CALL_LENGTH}}-minute call. I'll text you a link to grab a time."
+closing_booked: "You're all set. We're looking forward to speaking with you."
+closing_not_booked: "I've sent you everything you need. When you're ready, the link is in your texts."
+voicemail_prompt: "Please include your full name, business name, what you're interested in, and the best number to reach you."

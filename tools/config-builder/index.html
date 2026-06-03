@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice AI Qualification — Config Builder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --bg: #0d0f12;
+    --panel: #15181d;
+    --panel-2: #1b1f26;
+    --line: #2a2f38;
+    --ink: #e8eaed;
+    --muted: #8b93a0;
+    --accent: #ff6b4a;
+    --accent-2: #4ad6c4;
+    --hot: #ff6b4a;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.5;
+    background-image: radial-gradient(circle at 15% 10%, rgba(255,107,74,0.08), transparent 40%),
+                      radial-gradient(circle at 85% 90%, rgba(74,214,196,0.06), transparent 40%);
+    min-height: 100vh;
+  }
+  header {
+    padding: 32px 40px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+  }
+  header h1 .mark { color: var(--accent); }
+  header p { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 640px; }
+  .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: calc(100vh - 113px); }
+  .form-pane { padding: 28px 40px; overflow-y: auto; }
+  .out-pane {
+    padding: 28px 32px;
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    position: sticky; top: 0;
+    height: calc(100vh - 113px);
+    display: flex; flex-direction: column;
+  }
+  .field { margin-bottom: 18px; }
+  label { display: block; font-size: 12px; color: var(--accent-2); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  input, select, textarea {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 16px; font-weight: 600;
+    margin: 26px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .section-title:first-child { margin-top: 0; }
+  .weights { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+  .weight-val { color: var(--accent); font-weight: 700; min-width: 38px; text-align: right; }
+  input[type=range] { accent-color: var(--accent); padding: 0; }
+  .weight-total { font-size: 12px; margin-top: 8px; }
+  .weight-total.ok { color: var(--accent-2); }
+  .weight-total.bad { color: var(--hot); }
+  .out-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .out-head h2 { font-family: 'Fraunces', serif; font-size: 16px; }
+  pre {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+    font-size: 12px;
+    overflow: auto;
+    flex: 1;
+    white-space: pre;
+    color: #c8d0dc;
+  }
+  .yk { color: var(--accent-2); }
+  .yv { color: #e8b873; }
+  .yc { color: var(--muted); }
+  button {
+    background: var(--accent);
+    color: #0d0f12;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.1s, filter 0.1s;
+  }
+  button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  button.ghost { background: transparent; color: var(--accent-2); border: 1px solid var(--line); }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--accent-2); color: #0d0f12; padding: 10px 20px; border-radius: 8px;
+    font-weight: 700; font-size: 12px; opacity: 0; pointer-events: none; transition: all 0.25s;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .hint { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  @media (max-width: 860px) {
+    .wrap { grid-template-columns: 1fr; }
+    .out-pane { position: relative; height: auto; border-left: none; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Voice AI Qualification <span class="mark">/ Config Builder</span></h1>
+  <p>Generate a valid <code>agent_config.yaml</code> for the qualification engine without touching code. Fill the fields, tune the weights, copy or download the output. No data leaves your browser.</p>
+</header>
+
+<div class="wrap">
+  <div class="form-pane">
+    <div class="section-title">Agent</div>
+    <div class="row">
+      <div class="field"><label>Agent name</label><input id="agentName" value="Aria" oninput="render()"></div>
+      <div class="field"><label>Company name</label><input id="company" value="Acme Advisory" oninput="render()"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Call length (min)</label><input id="callLen" value="15" oninput="render()"></div>
+      <div class="field"><label>Vertical</label>
+        <select id="vertical" onchange="render()">
+          <option value="custom">Custom</option>
+          <option value="financial_advisory">Financial advisory</option>
+          <option value="healthcare_intake">Healthcare intake</option>
+          <option value="real_estate">Real estate</option>
+          <option value="home_services">Home services</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Calendar link</label><input id="calendar" value="https://cal.example.com/strategy" oninput="render()"></div>
+
+    <div class="section-title">Qualification questions</div>
+    <div class="field"><input id="q1" value="What are you trying to accomplish?" oninput="render()"></div>
+    <div class="field"><input id="q2" value="What's your timeline?" oninput="render()"></div>
+    <div class="field"><input id="q3" value="What's your budget or scope?" oninput="render()"></div>
+    <div class="field"><input id="q4" value="Are you the decision maker?" oninput="render()"></div>
+
+    <div class="section-title">Scoring weights <span class="hint">(must total 100)</span></div>
+    <div id="weights"></div>
+    <div id="weightTotal" class="weight-total"></div>
+
+    <div class="section-title">Compliance</div>
+    <div class="field">
+      <label>Recording / AI disclosure</label>
+      <textarea id="disclosure" rows="2" oninput="render()">This call may be recorded and is handled by an automated assistant. You can ask for a person anytime.</textarea>
+    </div>
+  </div>
+
+  <div class="out-pane">
+    <div class="out-head">
+      <h2>agent_config.yaml</h2>
+      <div style="display:flex; gap:8px;">
+        <button class="ghost" onclick="downloadYaml()">Download</button>
+        <button onclick="copyYaml()">Copy</button>
+      </div>
+    </div>
+    <pre id="output"></pre>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+  const WEIGHTS = [
+    { key: 'intent_clarity', label: 'Intent clarity', val: 25 },
+    { key: 'fit_threshold', label: 'Fit / budget', val: 30 },
+    { key: 'timeline', label: 'Timeline / urgency', val: 25 },
+    { key: 'decision_power', label: 'Decision power', val: 20 },
+  ];
+
+  const VERTICAL_WEIGHTS = {
+    healthcare_intake: [20, 25, 35, 20],
+    real_estate: [20, 30, 30, 20],
+    home_services: [25, 25, 30, 20],
+    financial_advisory: [25, 30, 25, 20],
+  };
+
+  function buildWeights() {
+    const c = document.getElementById('weights');
+    c.innerHTML = '';
+    WEIGHTS.forEach((w, i) => {
+      const div = document.createElement('div');
+      div.className = 'weights';
+      div.innerHTML = `<div><label style="margin:0">${w.label}</label>
+        <input type="range" min="0" max="60" value="${w.val}" id="w_${w.key}"
+          oninput="WEIGHTS[${i}].val=+this.value; render()"></div>
+        <div class="weight-val" id="wv_${w.key}">${w.val}</div>`;
+      c.appendChild(div);
+    });
+  }
+
+  function applyVertical() {
+    const v = document.getElementById('vertical').value;
+    if (VERTICAL_WEIGHTS[v]) {
+      VERTICAL_WEIGHTS[v].forEach((val, i) => {
+        WEIGHTS[i].val = val;
+        const slider = document.getElementById('w_' + WEIGHTS[i].key);
+        if (slider) slider.value = val;
+      });
+    }
+  }
+
+  let lastVertical = 'custom';
+  function esc(s){ return s.replace(/[\n\r]/g,' ').trim(); }
+
+  function buildYaml() {
+    const g = id => esc(document.getElementById(id).value);
+    const total = WEIGHTS.reduce((s, w) => s + w.val, 0);
+    const v = document.getElementById('vertical').value;
+    return `# Generated by the Voice AI Qualification config builder
+# Replace any remaining {{PLACEHOLDER}} values before deploying.
+
+agent:
+  name: "${g('agentName')}"
+  company: "${g('company')}"
+  vertical: "${v}"
+
+primary_conversion_goal: >
+  Get every qualified caller to book a ${g('callLen')}-minute call via the
+  calendar link.
+
+calendar_link: "${g('calendar')}"
+
+qualification:
+  checklist:
+    - "${g('q1')}"
+    - "${g('q2')}"
+    - "${g('q3')}"
+    - "${g('q4')}"
+
+scoring_weights:   # total must equal 100 (currently ${total})
+  intent_clarity: ${WEIGHTS[0].val}
+  fit_threshold: ${WEIGHTS[1].val}
+  timeline: ${WEIGHTS[2].val}
+  decision_power: ${WEIGHTS[3].val}
+
+tiers:
+  tier_1_high_intent: { min_score: 80, action: "alert_human + book + sms" }
+  tier_2_qualified:   { min_score: 50, action: "book + sms" }
+  tier_3_nurture:     { min_score: 20, action: "capture + sms_nurture" }
+  tier_4_capture:     { min_score: 0,  action: "capture_only" }
+
+compliance:
+  recording_disclosure: >
+    ${g('disclosure')}
+  sms_opt_out: "Reply STOP to opt out at any time."
+
+rules:
+  - "Never explain internal revenue mechanics to a caller."
+  - "Never make a returning client repeat full intake."
+  - "Never deprioritize an unclear-intent caller."
+  - "Always send the SMS, even on voicemail or no-booking calls."
+`;
+  }
+
+  function highlight(yaml) {
+    return yaml
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/(#.*)$/gm, '<span class="yc">$1</span>')
+      .replace(/^(\s*)([a-z_0-9]+):/gm, '$1<span class="yk">$2</span>:')
+      .replace(/"([^"]*)"/g, '<span class="yv">"$1"</span>');
+  }
+
+  function render() {
+    const v = document.getElementById('vertical').value;
+    if (v !== lastVertical) { applyVertical(); lastVertical = v; }
+    WEIGHTS.forEach(w => {
+      const el = document.getElementById('wv_' + w.key);
+      if (el) el.textContent = w.val;
+    });
+    const total = WEIGHTS.reduce((s, w) => s + w.val, 0);
+    const tEl = document.getElementById('weightTotal');
+    tEl.textContent = `Total: ${total} / 100` + (total === 100 ? '  ✓' : '  — adjust to 100');
+    tEl.className = 'weight-total ' + (total === 100 ? 'ok' : 'bad');
+    document.getElementById('output').innerHTML = highlight(buildYaml());
+  }
+
+  function copyYaml() {
+    navigator.clipboard.writeText(buildYaml()).then(() => {
+      const t = document.getElementById('toast');
+      t.textContent = 'Copied to clipboard';
+      t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1600);
+    });
+  }
+
+  function downloadYaml() {
+    const blob = new Blob([buildYaml()], { type: 'text/yaml' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'agent_config.yaml';
+    a.click();
+  }
+
+  buildWeights();
+  render();
+</script>
+</body>
+</html>

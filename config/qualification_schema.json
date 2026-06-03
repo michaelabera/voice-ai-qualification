@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Voice AI Qualification Schema",
+  "description": "Data model and scoring logic for inbound caller qualification. Redacted template.",
+  "type": "object",
+  "properties": {
+    "caller": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "company": { "type": "string" },
+        "route_id": {
+          "type": "string",
+          "enum": ["A_primary_service", "B_secondary_service", "C_partner_program", "D_returning_client", "E_other_triage"]
+        },
+        "is_returning_client": { "type": "boolean" }
+      },
+      "required": ["route_id"]
+    },
+    "scoring_criteria": {
+      "type": "object",
+      "description": "Each criterion is weighted. Replace placeholders with your real qualifying signals.",
+      "properties": {
+        "intent_clarity":  { "weight": 25, "description": "How clearly the caller expressed a buying need" },
+        "fit_threshold":   { "weight": 30, "description": "{{FIT_CRITERION_e.g._revenue_or_project_size}}" },
+        "timeline":        { "weight": 25, "description": "How soon they need a solution" },
+        "decision_power":  { "weight": 20, "description": "Whether the caller is a decision maker" }
+      }
+    },
+    "tiers": {
+      "type": "object",
+      "properties": {
+        "tier_1_high_intent": {
+          "min_score": 80,
+          "action": "alert_human + book + sms",
+          "description": "Fire the human alert immediately, regardless of whether they book."
+        },
+        "tier_2_qualified": {
+          "min_score": 50,
+          "action": "book + sms",
+          "description": "Move straight to booking and send the calendar link."
+        },
+        "tier_3_nurture": {
+          "min_score": 20,
+          "action": "capture + sms_nurture",
+          "description": "Not ready now. Capture details and enter the nurture cadence."
+        },
+        "tier_4_capture": {
+          "min_score": 0,
+          "action": "capture_only",
+          "description": "Low signal. Capture contact info so no caller is ever a dead end."
+        }
+      }
+    }
+  },
+  "required": ["caller", "scoring_criteria", "tiers"]
+}

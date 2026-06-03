@@ -1,0 +1,7 @@
+# Locale: Spanish (es)
+greeting: "Gracias por llamar a {{COMPANY_NAME}}, habla {{AGENT_NAME}}. ¿En qué puedo ayudarle hoy?"
+ask_intent: "Para orientarle mejor, ¿qué le gustaría lograr?"
+booking_offer: "Me gustaría agendarle una llamada breve de {{CALL_LENGTH}} minutos. Le enviaré un enlace por mensaje."
+closing_booked: "Todo listo. Esperamos hablar con usted pronto."
+closing_not_booked: "Le he enviado todo lo necesario. Cuando esté listo, el enlace está en sus mensajes."
+voicemail_prompt: "Por favor incluya su nombre completo, el nombre de su empresa, su interés y el mejor número para contactarle."

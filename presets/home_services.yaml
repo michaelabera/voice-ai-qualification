@@ -1,0 +1,37 @@
+# =============================================================================
+# VERTICAL PRESET: Home Services
+# =============================================================================
+# Overlay for config/agent_config.yaml. Merge over the base config.
+# =============================================================================
+
+vertical: "home_services"
+
+routes:
+  - id: "A_primary_service"
+    label: "New job request"
+    trigger: "Caller needs a service (repair, install, estimate)."
+  - id: "B_secondary_service"
+    label: "Maintenance plan"
+    trigger: "Caller asks about recurring service or a maintenance plan."
+  - id: "C_partner_program"
+    label: "Trade partner / referral"
+    trigger: "Caller is a subcontractor or referral partner."
+  - id: "D_returning_client"
+    label: "Existing customer"
+    trigger: "Caller is a past or current customer."
+  - id: "E_other_triage"
+    label: "General / triage"
+    trigger: "Warranty, scheduling, or unclear intent."
+
+qualification:
+  checklist:
+    - "What kind of job do you need done?"
+    - "How soon do you need it? Is this an emergency?"
+    - "What's the property type and rough scope?"
+    - "Are you the homeowner or decision maker?"
+
+scoring_overrides:
+  intent_clarity: 25
+  fit_threshold: 25     # job size/scope
+  timeline: 30          # emergencies score high
+  decision_power: 20

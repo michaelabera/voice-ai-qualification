@@ -1,0 +1,47 @@
+# =============================================================================
+# VERTICAL PRESET: Healthcare Intake
+# =============================================================================
+# Overlay for config/agent_config.yaml. Swaps route definitions and qualification
+# criteria for a healthcare-intake use case. Merge over the base config.
+#
+# COMPLIANCE: If callers may disclose PHI, request a BAA from your voice platform
+# and confirm scope before going live. See docs/COMPLIANCE.md.
+# =============================================================================
+
+vertical: "healthcare_intake"
+
+routes:
+  - id: "A_primary_service"
+    label: "New patient intake"
+    trigger: "Caller is a prospective new patient seeking an appointment."
+  - id: "B_secondary_service"
+    label: "Existing service line"
+    trigger: "Caller asks about a specific treatment or service."
+  - id: "C_partner_program"
+    label: "Referring provider"
+    trigger: "Caller is a referring physician or partner clinic."
+  - id: "D_returning_client"
+    label: "Existing patient"
+    trigger: "Caller is an existing patient."
+  - id: "E_other_triage"
+    label: "General / triage"
+    trigger: "Billing, records, or unclear intent."
+
+qualification:
+  checklist:
+    - "What type of care are you seeking?"
+    - "Is this urgent, or are you planning ahead?"
+    - "Are you a new or existing patient?"
+    - "Do you have insurance you'd like us to verify?"
+
+scoring_overrides:
+  intent_clarity: 20
+  fit_threshold: 25     # service-line match
+  timeline: 35          # urgency weighted highest in healthcare
+  decision_power: 20
+
+compliance:
+  phi_disclosure_required: true
+  recording_consent_line: >
+    Before we continue, please note this call may be recorded and is handled by
+    an automated assistant. You can ask for a human at any time.

@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.10", "3.11", "3.12" ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Validate config files
+        run: |
+          python src/validate_config.py config/agent_config.yaml
+          python src/validate_config.py config/qualification_schema.json
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Run module demos (smoke test)
+        run: |
+          python src/router.py --demo
+          python src/sms_cadence.py --demo
+          python src/analytics.py --demo
+          python src/ab_test.py --demo
+          python src/presets.py --list
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t voice-ai-qualification .
+      - name: Smoke test container health
+        run: |
+          docker run -d -p 8000:8000 --name vaq voice-ai-qualification
+          sleep 6
+          curl -fsS http://localhost:8000/health
+          docker rm -f vaq
