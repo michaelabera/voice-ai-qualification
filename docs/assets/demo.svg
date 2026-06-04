@@ -1,0 +1,22 @@
+<svg width="820" height="360" viewBox="0 0 820 360" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace, Menlo, monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#11161d"/></linearGradient>
+    <linearGradient id="hot" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff6b4a"/><stop offset="100%" stop-color="#ff8a6a"/></linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="820" height="360" rx="14" fill="url(#bg)" stroke="#222b36"/>
+  <circle cx="26" cy="26" r="5" fill="#ff5f56"/><circle cx="44" cy="26" r="5" fill="#ffbd2e"/><circle cx="62" cy="26" r="5" fill="#27c93f"/>
+  <text x="100" y="30" fill="#5b6673" font-size="12">voice-ai-qualification - live call</text>
+  <text x="60" y="80" fill="#4ad6c4" font-size="11">INBOUND</text><text x="245" y="80" fill="#4ad6c4" font-size="11">ROUTE</text><text x="430" y="80" fill="#4ad6c4" font-size="11">QUALIFY</text><text x="620" y="80" fill="#4ad6c4" font-size="11">ACTION</text>
+  <rect x="40" y="95" width="140" height="54" rx="9" fill="#161c24" stroke="#2a333f"/><text x="110" y="119" fill="#c9d3df" font-size="12" text-anchor="middle">Call comes</text><text x="110" y="136" fill="#c9d3df" font-size="12" text-anchor="middle">in after hours</text>
+  <rect x="225" y="95" width="140" height="54" rx="9" fill="#161c24" stroke="#2a333f"/><text x="295" y="119" fill="#c9d3df" font-size="12" text-anchor="middle">Route A</text><text x="295" y="136" fill="#7d8794" font-size="11" text-anchor="middle">primary service</text>
+  <rect x="410" y="95" width="150" height="54" rx="9" fill="#161c24" stroke="#2a333f"/><text x="485" y="118" fill="#c9d3df" font-size="12" text-anchor="middle">score: <tspan fill="#ff8a6a" font-weight="700">92</tspan></text><text x="485" y="136" fill="#ff6b4a" font-size="11" text-anchor="middle">TIER 1 high intent</text>
+  <rect x="610" y="95" width="170" height="54" rx="9" fill="#1c1410" stroke="url(#hot)" filter="url(#glow)"/><text x="695" y="118" fill="#ffb59e" font-size="11" text-anchor="middle">alert human</text><text x="695" y="136" fill="#ffb59e" font-size="11" text-anchor="middle">book + SMS</text>
+  <line x1="180" y1="122" x2="225" y2="122" stroke="#2a333f" stroke-width="2"/><line x1="365" y1="122" x2="410" y2="122" stroke="#2a333f" stroke-width="2"/><line x1="560" y1="122" x2="610" y2="122" stroke="#2a333f" stroke-width="2"/>
+  <circle r="5" fill="#4ad6c4" filter="url(#glow)"><animateMotion dur="3.5s" repeatCount="indefinite" path="M110,165 L295,165 L485,165 L695,165"/><animate attributeName="opacity" dur="3.5s" repeatCount="indefinite" values="0;1;1;1;0" keyTimes="0;0.1;0.5;0.9;1"/></circle>
+  <rect x="40" y="210" width="740" height="100" rx="10" fill="#0a0e13" stroke="#1e2630"/>
+  <text x="60" y="238" fill="#5b6673" font-size="12">$ curl -X POST /v1/qualify</text>
+  <text x="60" y="266" fill="#7d8794" font-size="13"><tspan fill="#4ad6c4">route</tspan>: A_primary_service  <tspan fill="#4ad6c4">tier</tspan>: <tspan fill="#ff8a6a">tier_1_high_intent</tspan><animate attributeName="opacity" values="0;0;1" keyTimes="0;0.45;0.55" dur="3.5s" repeatCount="indefinite"/></text>
+  <text x="60" y="290" fill="#7d8794" font-size="13"><tspan fill="#4ad6c4">actions</tspan>: [alert_human, book, sms]  <tspan fill="#4ad6c4">alert</tspan>: <tspan fill="#27c93f">true</tspan><animate attributeName="opacity" values="0;0;1" keyTimes="0;0.62;0.72" dur="3.5s" repeatCount="indefinite"/></text>
+  <text x="410" y="340" fill="#5b6673" font-size="12" text-anchor="middle">A missed after-hours call, qualified and booked in one pass.</text>
+</svg>

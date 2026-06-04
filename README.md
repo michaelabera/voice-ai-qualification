@@ -1,5 +1,8 @@
 # Voice AI Qualification Engine
 
+![Voice AI Qualification Engine — a live call from inbound to booked](./docs/assets/demo.svg)
+
+
 **A production-grade, platform-agnostic configuration framework for inbound voice AI agents that qualify callers, route them intelligently, and convert missed calls into booked meetings — without losing a single lead.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](./LICENSE)
