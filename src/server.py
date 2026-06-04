@@ -21,9 +21,12 @@ from __future__ import annotations
 from fastapi import FastAPI, Response
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
+import os
+
 from models import Caller, Decision, CallOutcomeEvent, Route, Tier
 from router import Caller as RouterCaller, handle
 from logging_utils import get_logger, log_event
+from analytics_sink import MemorySink, SQLiteSink
 
 app = FastAPI(
     title="Voice AI Qualification Engine",
@@ -38,8 +41,9 @@ ALERTS = Counter("vaq_human_alerts_total", "High-intent human alerts fired")
 SCORE_HIST = Histogram("vaq_score", "Distribution of qualification scores",
                        buckets=[0, 20, 50, 80, 100])
 
-# In-memory event log for the demo analytics endpoint. Swap for a real sink.
-_EVENTS: list[CallOutcomeEvent] = []
+# Pluggable analytics sink: set VAQ_DB for durable SQLite, else in-memory.
+_db = os.environ.get("VAQ_DB")
+_SINK = SQLiteSink(_db) if _db else MemorySink()
 
 
 @app.get("/health")
@@ -82,7 +86,7 @@ def qualify(caller: Caller) -> Decision:
     if decision.alert_human:
         ALERTS.inc()
 
-    _EVENTS.append(CallOutcomeEvent(
+    _SINK.record(CallOutcomeEvent(
         route=decision.route,
         tier=decision.tier,
         score=decision.score,
@@ -100,4 +104,4 @@ def qualify(caller: Caller) -> Decision:
 @app.get("/v1/analytics")
 def analytics_summary() -> dict:
     from analytics import summarize
-    return summarize(_EVENTS)
+    return summarize(_SINK.all_events())
