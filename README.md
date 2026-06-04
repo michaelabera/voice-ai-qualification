@@ -234,6 +234,18 @@ If you adapt it, the content you add is yours; keep proprietary or client-confid
 
 ---
 
+## New to GitHub? Start here
+
+- **What this is:** read the top of this page (the overview and demo).
+- **How to use it:** see [USAGE.md](./USAGE.md) for step-by-step setup.
+- **Common questions, costs, and what it can/can't do:** see [FAQ.md](./FAQ.md).
+- **How it's built:** browse the [`docs/`](./docs) folder.
+- **The code itself:** lives in the [`src/`](./src) folder.
+
+To download everything: click the green **Code** button near the top, then **Download ZIP**.
+
+---
+
 ## Author
 
 Built by **[@MichaelAberaAI](https://github.com/michaelabera)** — AI revenue systems and sales-automation architect, focused on turning manual sales operations into measurable, automated pipeline.
@@ -241,3 +253,7 @@ Built by **[@MichaelAberaAI](https://github.com/michaelabera)** — AI revenue s
 ## License
 
 [MIT](./LICENSE) — use it, fork it, ship it.
+
+## Disclaimer
+
+This software is provided "as is," without warranty of any kind, under the MIT License. It is a decision-logic framework, not a turnkey product or a managed service. Anyone deploying it is responsible for their own integration, security hardening, and legal compliance (including call-recording consent and messaging regulations in their jurisdiction). Nothing here is legal advice.
