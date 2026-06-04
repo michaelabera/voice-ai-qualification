@@ -2,6 +2,7 @@
 
 ![Voice AI Qualification Engine — a live call from inbound to booked](./docs/assets/demo.svg)
 
+**New here? Start with the [Usage Guide](./USAGE.md), or see the [FAQ](./FAQ.md) for costs, scope, and honest answers.**
 
 **A production-grade, platform-agnostic configuration framework for inbound voice AI agents that qualify callers, route them intelligently, and convert missed calls into booked meetings — without losing a single lead.**
 
